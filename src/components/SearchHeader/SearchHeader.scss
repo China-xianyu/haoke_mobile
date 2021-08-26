@@ -1,0 +1,52 @@
+/* 顶部搜素 */
+.index_search_box {
+  position: absolute;
+  top: 25px;
+  padding: 0 10px;
+  width: 100%;
+
+  /* 左侧白色区域 */
+  .index_search {
+    flex: 1;
+    margin: 0 10px;
+    padding: 5px 5px 5px 8px;
+    height: 34px;
+    border-radius: 3px;
+    background-color: #fff;
+  }
+
+  /* 位置 */
+  .index_location {
+    .icon-arrow {
+      margin-right: 2px;
+      font-size: 12px;
+      color: #7f7f80;
+    }
+  }
+
+  /* 搜素表单 */
+  .index_form {
+    margin-left: 12px;
+    line-height: 16px;
+    border-left: 1px solid #e5e5e5;
+
+    .icon-seach {
+      padding: 0 2px 0 12px;
+      font-size: 15px;
+      color: #9c9fa1;
+      vertical-align: bottom;
+    }
+
+    .text {
+      padding-left: 4px;
+      font-size: 13px;
+      color: #9c9fa1;
+    }
+  }
+
+  /* 右侧地图图标 */
+  .icon-map {
+    font-size: 25px;
+    color: #fff;
+  }
+}

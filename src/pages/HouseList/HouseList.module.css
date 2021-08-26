@@ -1,0 +1,40 @@
+/* 覆盖 searchHeader 样式 */
+.searchHeader {
+  position: relative;
+  top: 0;
+  padding: 0;
+}
+
+.root {
+  height: 100%;
+}
+
+.header {
+  padding: 0 10px;
+  height: 45px;
+  background: #f6f5f6;
+}
+
+.header :global(.icon-back) {
+  font-size: 16px;
+  color: #999;
+}
+
+.header :global(.icon-map) {
+  color: #00ae66;
+}
+
+.header :global(.search) {
+  height: 30px;
+}
+
+.houseList {
+  padding: 0 15px;
+}
+
+.loading {
+  line-height: 120px;
+  text-align: center;
+  height: 110px;
+  background-color: #f6f5f6;
+}

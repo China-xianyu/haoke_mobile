@@ -1,0 +1,10 @@
+/* 公共顶部导航栏默认样式 */
+.navHeader {
+  color: #333;
+  background-color: #f6f5f6;
+}
+
+/* 全局类名处理 */
+.navHeader :global(.am-navbar-title) {
+  color: #333;
+}

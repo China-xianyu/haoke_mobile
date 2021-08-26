@@ -1,0 +1,199 @@
+.map {
+  padding-top: 45px;
+  height: 100%;
+}
+
+.map :global(.am-navbar) {
+  margin-top: -45px;
+}
+
+.container {
+  height: 100%;
+}
+
+/* 文本覆盖物 */
+.bubble {
+  display: inline-block;
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  text-align: center;
+  color: #fff;
+  line-height: 1;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 100%;
+  background: rgba(12, 181, 106, .9);
+  cursor: pointer;
+}
+
+.name {
+  padding: 18px 0 6px 0;
+}
+
+/* 小区文本覆盖物 */
+.rect {
+  position: absolute;
+  padding: 0 3px;
+  width: 100px;
+  height: 20px;
+  line-height: 19px;
+  white-space: nowrap;
+  background: rgba(12, 181, 106, 0.9);
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.arrow {
+  display: block;
+  margin: 0 auto;
+  width: 0;
+  height: 0;
+  border: 4px solid transparent;
+  border-top-color: #00a75b;
+}
+
+.housesname {
+  display: inline-block;
+  width: 70px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+  overflow: hidden;
+}
+
+.housesnum {
+  display: inline-block;
+  width: 20px;
+}
+
+/* 房源列表样式 */
+.houseList {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 330px;
+  background: #fff;
+  transition: all 1s;
+  transform: translate3d(0, 330px, 0);
+}
+
+.show {
+  transform: translate3d(0, 0, 0);
+}
+
+.titleWrap {
+  position: relative;
+  width: 100%;
+  background: #c0c0c2;
+  border-top: 1px solid #c8c8c8;
+}
+
+.listTitle {
+  display: inline-block;
+  margin: 0;
+  padding-left: 10px;
+  font-size: 16px;
+  color: #1e1e1e;
+  line-height: 43px;
+  vertical-align: middle;
+}
+
+.titleMore {
+  padding-right: 15px;
+  float: right;
+  font-size: 13px;
+  color: #1e1e1e;
+  line-height: 43px;
+  vertical-align: middle;
+}
+
+.titleMore:visited {
+  text-decoration: none;
+}
+
+/* 房屋列表样式 */
+.houseItems {
+  padding: 0 10px 45px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.house {
+  box-sizing: border-box;
+  position: relative;
+  padding-top: 18px;
+  height: 120px;
+  justify-content: space-around;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.imgWrap {
+  width: 106px;
+  height: 80px;
+  float: left;
+}
+
+.img {
+  width: 106px;
+  height: 80px;
+}
+
+.content {
+  padding-left: 12px;
+  line-height: 22px;
+  overflow: hidden;
+}
+
+.title {
+  margin: 0;
+  font-size: 15px;
+  color: #394043;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+  overflow: hidden;
+}
+
+.desc {
+  font-size: 12px;
+  color: #afb2b3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+  overflow: hidden;
+}
+
+.price {
+  font-size: 12px;
+  color: #fa5741;
+}
+
+.priceNum {
+  font-size: 16px;
+  font-weight: bolder;
+}
+
+.tag {
+  display: inline-block;
+  margin-right: 5px;
+  padding: 4px 5px;
+  font-size: 12px;
+  line-height: 12px;
+  border-radius: 3px;
+}
+
+.tag1 {
+  color: #39becd;
+  background: #e1f5f8;
+}
+
+.tag2 {
+  color: #3fc28c;
+  background: #e1f5ed;
+}
+
+.tag3 {
+  color: #5aabfd;
+  background: #e6f2ff;
+}

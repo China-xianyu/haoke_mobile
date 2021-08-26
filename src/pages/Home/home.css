@@ -1,0 +1,13 @@
+.home {
+  padding-bottom: 50px;
+}
+
+.home .iconfont {
+  font-size: 20px;
+}
+
+.home .am-tabs-tab-bar-wrap {
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+}

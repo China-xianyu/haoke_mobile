@@ -1,0 +1,45 @@
+.search {
+  height: 100%;
+  background: #fff;
+}
+
+.search :global(.ReactVirtualized__List) {
+  padding-bottom: 0 !important;
+}
+
+.searchHeader {
+  position: fixed;
+  top: 0;
+  z-index: 999;
+  width: 100%;
+}
+
+.houseList {
+  margin-top: 44px;
+}
+
+.loading {
+  line-height: 120px;
+  text-align: center;
+  height: 110px;
+  background-color: #f6f5f6;
+}
+
+.tips {
+  padding: 0 10px 10px;
+  line-height: 50px;
+  position: absolute;
+  top: 44px;
+  width: 100%;
+  background-color: #fff;
+  font-size: 14px;
+}
+
+.tip {
+  padding-left: 2px;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.tip:last-child {
+  border-bottom: 0;
+}

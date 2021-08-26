@@ -1,0 +1,37 @@
+html,
+body,
+ul {
+  margin: 0;
+  padding: 0;
+  font-family: 'Microsoft YaHei';
+  color: #333;
+  background-color: #fff;
+}
+
+* {
+  box-sizing: border-box;
+  touch-action: none;
+}
+
+h1,
+h2,
+p,
+h3,
+ul {
+  margin: 0;
+}
+
+html,
+body,
+#root,
+.App {
+  height: 100%;
+}
+
+li {
+  list-style: none;
+}
+
+.fixed-body {
+  overflow: hidden;
+}
