@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {Carousel, Flex, Grid, WingBlank, Toast} from 'antd-mobile'
-import axios from 'axios'
+import propTypes from 'prop-types'
+import {connect} from 'react-redux'
 
 // 导入utils工具方法
 import {getCurrentCity} from '../../utils'
@@ -13,9 +14,9 @@ import Nav4 from '../../assets/images/nav-4.png'
 import './index.scss'
 // 引入图标样式
 import '../../assets/fonts/iconfont.css'
-import {API} from '../../utils'
 import SearchHeader from '../../components/SearchHeader'
 import HouseItem from '../../components/HouseItem'
+import {getGroups, getSwipers, getRecommend} from '../../redux/actions'
 
 // 导航菜单数据
 const navs = [
@@ -25,61 +26,27 @@ const navs = [
   {id: 4, img: Nav4, title: '去出租', path: '/rent/add', state: {}}
 ]
 
-export default class Index extends Component {
+class Index extends Component {
 
   state = {
-    // 轮播图数据
-    swipers: [],
-    isSwipersLoaded: false,
-    // 租房小组数据
-    groups: [],
-    // 最新资讯数据
-    recommend: [],
     // 当前城市的名字
-    curCityName: ''
+    curCityName: '',
   }
 
-  cancel = null
-
-  // 获取轮播图数据
-  async getSwiper() {
-    const result = await API.get('/home/swiper/')
-    this.setState({
-      swipers: result.data.body,
-      isSwipersLoaded: true
-    })
-  }
-
-  // 获取租房小组数据
-  async getGroups() {
-    const result = await API.get('/home/group')
-    this.setState({
-      groups: result.data.body
-    })
-  }
-
-  // 获取推荐房源
-  async getRecommend() {
-    try {
-      Toast.loading('正在加载中', 0, null, false)
-      const result = await API({
-        url: '/home/recommend',
-        cancelToken: new axios.CancelToken((c) => this.cancel = c)
-      })
-      Toast.hide()
-      if (result) {
-        this.setState({
-          recommend: result.data.body
-        })
-      }
-    } catch (e) {
-
-    }
+  static propTypes = {
+    // 租房小组数据
+    groups: propTypes.array.isRequired,
+    getGroups: propTypes.func.isRequired,
+    // 轮播图数据
+    getSwipers: propTypes.func.isRequired,
+    // 推荐房源
+    getRecommend: propTypes.func.isRequired,
+    recommend: propTypes.array.isRequired,
   }
 
   // 渲染轮播图结构
   renderSwiper = () => {
-    return this.state.swipers.map(item => (
+    return this.props.swipers.map(item => (
       <a
         key={item.id}
         href="http://localhost:3000"
@@ -106,7 +73,7 @@ export default class Index extends Component {
 
   // 渲染最新资讯
   renderRecommend = () => {
-    return this.state.recommend.map(item => (
+    return this.props.recommend.map(item => (
       <div key={item.houseCode} onClick={() => this.props.history.push(`/houseDetail/${item.houseCode}`)}>
         <HouseItem
           title={item.title}
@@ -119,15 +86,19 @@ export default class Index extends Component {
     ))
   }
 
-
   componentDidMount() {
-    this.getSwiper()
-    this.getGroups()
-    this.getRecommend();
+    Toast.loading('正在加载中', 0, null, false)
+    // 获取租房小组数据
+    this.props.getGroups()
+    // 获取轮播图数据
+    this.props.getSwipers()
+    this.props.getRecommend();
 
     // 获取当前城市信息
     (async () => {
-      return await getCurrentCity()
+      const result = await getCurrentCity()
+      Toast.hide()
+      return result
     })().then(
       response => {
         this.setState({
@@ -135,17 +106,19 @@ export default class Index extends Component {
         })
       }
     )
+
   }
 
   componentWillUnmount() {
     Toast.hide()
     this.setState = () => {
     }
-    this.cancel()
   }
 
   render() {
-    const {isSwipersLoaded, groups, curCityName} = this.state
+    const {curCityName} = this.state
+    const {groups, swipers} = this.props
+    let isSwipersLoaded = swipers.length > 0
     return (
       <div>
         <div className="index">
@@ -193,3 +166,14 @@ export default class Index extends Component {
     )
   }
 }
+
+export default connect(
+  state => {
+    return {
+      groups: state.groups,
+      swipers: state.swipers,
+      recommend: state.recommend
+    }
+  },
+  {getGroups, getSwipers, getRecommend}
+)(Index)

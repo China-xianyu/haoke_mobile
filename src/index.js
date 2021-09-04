@@ -9,7 +9,13 @@ import 'antd-mobile/dist/antd-mobile.css'
 import './index.css'
 // 导入字体图标库的的样式文件
 import './assets/fonts/iconfont.css'
+import store from './redux/store'
 // 导入根组件
 import App from './App';
+import {Provider} from 'react-redux'
 
-ReactDOM.render(<App/>, document.getElementById('root'));
+ReactDOM.render((
+  <Provider store={store}>
+    <App/>
+  </Provider>
+), document.getElementById('root'));
