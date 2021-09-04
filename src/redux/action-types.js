@@ -4,3 +4,7 @@ export const RECEIVER_GROUPS = 'RECEIVER_GROUPS'
 export const RECEIVER_SWIPERS = 'RECEIVER_SWIPERS'
 // 接收推荐房源
 export const RECEIVER_RECOMMEND = 'RECEIVER_RECOMMEND'
+// 房屋筛选条件
+export const MODIFY_FILTERS = 'MODFIY_FILTERS'
+// 获取符合条件的房屋
+export const RECEIVER_HOUSES = 'RECEIVER_HOUSES'

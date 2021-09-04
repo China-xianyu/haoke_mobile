@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
 import {Flex, Toast} from 'antd-mobile'
+import {connect} from 'react-redux'
+import {setFilters, getHouses} from '../../redux/actions'
 
 import {List, AutoSizer, WindowScroller, InfiniteLoader} from 'react-virtualized'
 
@@ -11,11 +13,10 @@ import NoHouse from '../../components/NoHouse'
 import {API} from '../../utils'
 import styles from './HouseList.module.css'
 
-export default class HouseList extends Component {
+class HouseList extends Component {
 
   state = {
     curCityName: '',
-    list: [],
     count: 0,
     isLoading: false
   }
@@ -58,20 +59,9 @@ export default class HouseList extends Component {
     }
   }
 
-  /* 获取筛选条件 */
-  onFilters = (filters) => {
-    this.filters = filters
-
-    /* 执行获取数据的方法 */
-    this.searchHouseList()
-
-    /* 更新数据时 返回顶部 */
-    window.scrollTo(0, 0)
-  }
-
   /* 渲染房屋列表 */
   renderHouseList = ({key, index, style}) => {
-    const {list} = this.state
+    const {list} = this.props.housesData
     const house = list[index]
 
     /* 如果房屋数据不存在 返回一个loading */
@@ -98,6 +88,7 @@ export default class HouseList extends Component {
   /* 渲染列表 */
   renderList = () => {
     const {count, isLoading} = this.state
+    console.log(this.props.housesData)
     const {renderHouseList, isRowLoaded, loadMoreRows} = this
 
     if (count === 0 && !isLoading) {
@@ -181,7 +172,8 @@ export default class HouseList extends Component {
     const {label} = JSON.parse(localStorage.getItem('hkzf_city'))
     this.setState({curCityName: label})
 
-    this.searchHouseList(entire)
+    this.props.getHouses(entire)
+
   }
 
   componentDidUpdate() {
@@ -199,7 +191,8 @@ export default class HouseList extends Component {
 
   render() {
     const {curCityName} = this.state
-    const {onFilters, renderList} = this
+    const {renderList} = this
+    const {setFilters} = this.props
     return (
       <div className={styles.root}>
         {/* 顶部搜索栏 */}
@@ -211,7 +204,7 @@ export default class HouseList extends Component {
         {/* 顶置 */}
         <Sticky>
           {/* 条件筛选栏 */}
-          <Filter onFilters={onFilters}/>
+          <Filter setFilters={setFilters}/>
         </Sticky>
 
         {/* 房屋列表 */}
@@ -220,3 +213,8 @@ export default class HouseList extends Component {
     )
   }
 }
+
+export default connect(
+  state => ({filters: state.modifyFilters, housesData: state.housesData}),
+  {setFilters, getHouses}
+)(HouseList)

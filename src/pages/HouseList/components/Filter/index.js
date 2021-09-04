@@ -1,5 +1,4 @@
 import React, {Component, createRef} from 'react'
-import PropTypes from 'prop-types'
 import RcQueueAnim from 'rc-queue-anim'
 
 import FilterTitle from '../FilterTitle'
@@ -23,10 +22,6 @@ const selectedValues = {
 }
 
 export default class Filter extends Component {
-
-  static propTypes = {
-    onFilters: PropTypes.func.isRequired
-  }
 
   state = {
     /* 选项选中状态 */
@@ -130,7 +125,6 @@ export default class Filter extends Component {
     const filters = {}
 
     const {area, mode, price, more} = newSelectedValues
-    const {onFilters} = this.props
 
     const areaKey = area[0]
     let areaValues = null
@@ -143,9 +137,10 @@ export default class Filter extends Component {
     filters['price'] = price[0]
     filters['more'] = more.join(',')
 
-    /* 传递给List组件 */
-    onFilters(filters)
+    /* 更新数据时 返回顶部 */
+    window.scrollTo(0, 0)
 
+    this.props.setFilters(filters)
     /* 更新状态 */
     this.setState({
       openType: '',
