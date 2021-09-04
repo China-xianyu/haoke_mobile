@@ -2351,10 +2351,10 @@ ansi-styles@^4.0.0, ansi-styles@^4.1.0:
   dependencies:
     color-convert "^2.0.1"
 
-antd-mobile@^2.3.4:
-  version "2.3.4"
-  resolved "https://registry.npm.taobao.org/antd-mobile/download/antd-mobile-2.3.4.tgz?cache=0&sync_timestamp=1600412573816&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fantd-mobile%2Fdownload%2Fantd-mobile-2.3.4.tgz#8f584707b30343d102f3ca10fdaf677e2a5d1cc8"
-  integrity sha1-j1hHB7MDQ9EC88oQ/a9nfipdHMg=
+antd-mobile@2.3.1:
+  version "2.3.1"
+  resolved "https://registry.nlark.com/antd-mobile/download/antd-mobile-2.3.1.tgz?cache=0&sync_timestamp=1630515962106&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fantd-mobile%2Fdownload%2Fantd-mobile-2.3.1.tgz#04d8709c198eee27c3c41b903cb2ad77a16028e3"
+  integrity sha1-BNhwnBmO7ifDxBuQPLKtd6FgKOM=
   dependencies:
     array-tree-filter "~2.1.0"
     babel-runtime "6.x"

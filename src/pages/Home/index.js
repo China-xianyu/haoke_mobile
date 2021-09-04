@@ -5,7 +5,7 @@ import {TabBar} from 'antd-mobile'
 // 导入home的样式
 import './home.css'
 // 引入路由组件
-import Index from '../Index'
+import Index from '../../containers/IndexVessel/IndexVessel'
 import HouseList from '../HouseList'
 import Profile from '../Profile'
 

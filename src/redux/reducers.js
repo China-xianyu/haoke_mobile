@@ -1,6 +1,7 @@
 import {RECEIVER_GROUPS, RECEIVER_SWIPERS, RECEIVER_RECOMMEND} from './action-types'
 import {combineReducers} from 'redux'
 
+// 租房小组
 function groups(state = [], action) {
   if (action.type === RECEIVER_GROUPS) {
     return action.data
@@ -9,6 +10,7 @@ function groups(state = [], action) {
   }
 }
 
+// slider
 function swipers(state = [], action) {
   if (action.type === RECEIVER_SWIPERS) {
     return action.data

@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import {Carousel, Flex, Grid, WingBlank, Toast} from 'antd-mobile'
 import propTypes from 'prop-types'
-import {connect} from 'react-redux'
 
 // 导入utils工具方法
 import {getCurrentCity} from '../../utils'
@@ -16,7 +15,6 @@ import './index.scss'
 import '../../assets/fonts/iconfont.css'
 import SearchHeader from '../../components/SearchHeader'
 import HouseItem from '../../components/HouseItem'
-import {getGroups, getSwipers, getRecommend} from '../../redux/actions'
 
 // 导航菜单数据
 const navs = [
@@ -26,7 +24,7 @@ const navs = [
   {id: 4, img: Nav4, title: '去出租', path: '/rent/add', state: {}}
 ]
 
-class Index extends Component {
+export default class Index extends Component {
 
   state = {
     // 当前城市的名字
@@ -71,15 +69,12 @@ class Index extends Component {
     ))
   }
 
-  // 渲染最新资讯
+  // 渲染推荐房源
   renderRecommend = () => {
     return this.props.recommend.map(item => (
       <div key={item.houseCode} onClick={() => this.props.history.push(`/houseDetail/${item.houseCode}`)}>
         <HouseItem
-          title={item.title}
-          desc={item.desc}
-          price={item.price}
-          tags={item.tags}
+          {...item}
           src={item.houseImg}
         />
       </div>
@@ -87,18 +82,16 @@ class Index extends Component {
   }
 
   componentDidMount() {
-    Toast.loading('正在加载中', 0, null, false)
+    const {getGroups, getSwipers, getRecommend} = this.props
     // 获取租房小组数据
-    this.props.getGroups()
+    getGroups()
     // 获取轮播图数据
-    this.props.getSwipers()
-    this.props.getRecommend();
+    getSwipers()
+    getRecommend();
 
     // 获取当前城市信息
     (async () => {
-      const result = await getCurrentCity()
-      Toast.hide()
-      return result
+      return await getCurrentCity()
     })().then(
       response => {
         this.setState({
@@ -118,7 +111,7 @@ class Index extends Component {
   render() {
     const {curCityName} = this.state
     const {groups, swipers} = this.props
-    let isSwipersLoaded = swipers.length > 0
+    let isSwipersLoaded = swipers.length
     return (
       <div>
         <div className="index">
@@ -133,12 +126,13 @@ class Index extends Component {
 
             {/* 搜索框 */}
             <SearchHeader curCityName={curCityName}/>
-
           </div>
+
           {/* 导航菜单 */}
           <Flex className="index_nav">
             {this.renderNav()}
           </Flex>
+
           {/* 租房小组 */}
           <div className="index_group">
             <h3 className="group_title">
@@ -166,14 +160,3 @@ class Index extends Component {
     )
   }
 }
-
-export default connect(
-  state => {
-    return {
-      groups: state.groups,
-      swipers: state.swipers,
-      recommend: state.recommend
-    }
-  },
-  {getGroups, getSwipers, getRecommend}
-)(Index)

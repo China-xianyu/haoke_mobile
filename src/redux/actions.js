@@ -1,6 +1,5 @@
 import {API} from '../utils'
 import {RECEIVER_GROUPS, RECEIVER_SWIPERS, RECEIVER_RECOMMEND} from './action-types'
-
 // 接收租房小组
 const receiverGroups = groups => ({type: RECEIVER_GROUPS, data: groups})
 // 接收轮播图数据
@@ -8,6 +7,7 @@ const receiverSwipers = swipers => ({type: RECEIVER_SWIPERS, data: swipers})
 // 接收推荐房源
 const receiverRecommend = recommend => ({type: RECEIVER_RECOMMEND, data: recommend})
 
+// 租房小组
 export const getGroups = () => dispatch => {
   new Promise((resolve, reject) => {
     API.get('/home/group/').then(
@@ -25,6 +25,7 @@ export const getGroups = () => dispatch => {
   )
 }
 
+// slider
 export const getSwipers = () => dispatch => {
   new Promise((resolve, reject) => {
     API.get('/home/swiper').then(
@@ -42,6 +43,7 @@ export const getSwipers = () => dispatch => {
   )
 }
 
+// 推荐房源
 export const getRecommend = () => dispatch => {
   new Promise((resolve, reject) => {
     API({
