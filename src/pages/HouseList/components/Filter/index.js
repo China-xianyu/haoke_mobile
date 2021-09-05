@@ -5,7 +5,6 @@ import PubSub from 'pubsub-js'
 import FilterTitle from '../FilterTitle'
 import FilterMore from '../FilterMore'
 import FilterPicker from '../FilterPicker'
-import {API} from '../../../../utils'
 import style from './Filter.module.scss'
 
 const titleSelectStatus = {
@@ -158,9 +157,9 @@ export default class Filter extends Component {
   renderFilterMore = () => {
     const {
       openType,
-      filtersData: {characteristic, floor, oriented, roomType},
       selectedValues
     } = this.state
+    const {filtersData: {characteristic, floor, oriented, roomType}} = this.props
     const {onSave, onCancel} = this
     let data = {characteristic, floor, oriented, roomType}
     const defaultValues = selectedValues.more
@@ -175,10 +174,10 @@ export default class Filter extends Component {
   renderFilterPicker = () => {
     const {
       openType,
-      filtersData: {subway, area, rentType, price},
       selectedValues,
       show
     } = this.state
+    const {filtersData: {subway, area, rentType, price}} = this.props
     const {onCancel, onSave} = this
 
     if (openType !== 'area' && openType !== 'mode' && openType !== 'price') {
@@ -208,20 +207,9 @@ export default class Filter extends Component {
                          defaultValue={defaultValue} show={show}/>
   }
 
-  async getFiltersData() {
-    const {value, label} = JSON.parse(localStorage.getItem('hkzf_city'))
-    const result = await API.get(`/houses/condition/?id=${value}&city_name=${label}`)
-    this.setState({
-      filtersData: result.data.body
-    })
-  }
-
   componentDidMount() {
     /* 获取body */
     this.htmlBody = document.querySelector('body')
-
-    /* 获取筛选数据 */
-    this.getFiltersData()
   }
 
   componentWillUnmount() {
@@ -230,7 +218,6 @@ export default class Filter extends Component {
   }
 
   render() {
-
     const {titleSelectStatus, openType} = this.state
     const {ClickHandler, onCancel, renderFilterPicker, renderFilterMore} = this
 

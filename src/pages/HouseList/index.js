@@ -9,9 +9,9 @@ import SearchHeader from '../../components/SearchHeader'
 import HouseItem from '../../components/HouseItem'
 import Sticky from '../../components/Sticky'
 import NoHouse from '../../components/NoHouse'
-import {API} from '../../utils'
 import styles from './HouseList.module.css'
-import {setFilters, getHouses, moreHouses} from '../../redux/actions'
+import {getCurrentCity} from '../../utils'
+import {setFilters, getHouses, moreHouses, getFilters} from '../../redux/actions'
 
 
 class HouseList extends Component {
@@ -25,39 +25,6 @@ class HouseList extends Component {
   filters = {}
 
   /* 获取房屋数据 */
-  async searchHouseList(entire = null) {
-    const {label} = JSON.parse(localStorage.getItem('hkzf_city'))
-
-    /* 开启 loading 动画 */
-    Toast.loading('加载房源中', 0, null, false)
-    if (entire !== null) {
-      this.filters['mode'] = entire === 1;
-    }
-    this.setState({isLoading: true})
-
-    /* 获取数据 */
-    const result = await API.get('/houses/house', {
-      params: {
-        cityName: label,
-        ...this.filters,
-        start: 1,
-        end: 20
-      }
-    })
-
-    /* 存储数据 */
-    const {list, count} = result.data.body
-    this.setState({list, count, isLoading: false})
-
-    /* 如果数据返回成功 关闭 loading 动画 */
-    Toast.hide()
-
-    /* 在没有房源的时候不提示 */
-    if (count !== 0) {
-      /* 提示房源数量 */
-      Toast.info(`共找到${count}套房源`, 2, null, false)
-    }
-  }
 
   /* 渲染房屋列表 */
   renderHouseList = ({key, index, style}) => {
@@ -74,11 +41,8 @@ class HouseList extends Component {
     return (
       <div key={key} style={style} onClick={() => this.props.history.push(`/houseDetail/${house.houseCode}`)}>
         <HouseItem
-          tags={house.tags}
+          {...house}
           src={house.houseImg}
-          price={house.price * 1}
-          desc={house.desc}
-          title={house.title}
           ClickHandler={() => {
           }}/>
       </div>
@@ -142,41 +106,46 @@ class HouseList extends Component {
   loadMoreRows = ({startIndex, stopIndex}) => {
     const {label} = JSON.parse(localStorage.getItem('hkzf_city'))
     const {moreHouses} = this.props;
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       moreHouses(startIndex, label)
       resolve()
     })
   }
 
   _get_house = (entire) => {
+    Toast.loading('正在加载中', 0, null, false)
     this.props.getHouses(entire).then(
       () => {
-        this.setState({isLoading: true})
         Toast.hide()
+        const {count} = this.props
+        /* 提示房源数量 */
+        Toast.info(`共找到${count}套房源`, 2, null, false)
+        this.setState({isLoading: true})
       },
       () => {
-        this.setState({isLoading: false})
         Toast.hide()
+        this.setState({isLoading: false})
       }
     )
   }
 
-  componentDidMount() {
-    let entire;
-    if (this.props.location.state) {
-      entire = this.props.location.state
-    }
+  async componentDidMount() {
+    let entire = this.props.location.state ? this.props.location.state.entire : null
+
     /* 获取当前定位城市 */
-    const {label} = JSON.parse(localStorage.getItem('hkzf_city'))
+    let city = JSON.parse(localStorage.getItem('hkzf_city'))
+    if (city === null) {
+      await getCurrentCity()
+    }
+    const {label, value} = JSON.parse(localStorage.getItem('hkzf_city'))
     this.setState({curCityName: label})
     const {_get_house} = this;
-    Toast.loading('正在加载中', 0, null, false)
     _get_house(entire)
     // 发布筛选房源事件
     PubSub.subscribe('getHouse', function (msg, data) {
-      Toast.loading('正在加载中', 0, null, false)
       _get_house(entire)
     })
+    this.props.getFilters(label, value)
   }
 
   componentDidUpdate() {
@@ -195,7 +164,7 @@ class HouseList extends Component {
   render() {
     const {curCityName} = this.state
     const {renderList} = this
-    const {setFilters} = this.props
+    const {setFilters, filtersData} = this.props
     return (
       <div className={styles.root}>
         {/* 顶部搜索栏 */}
@@ -207,7 +176,7 @@ class HouseList extends Component {
         {/* 顶置 */}
         <Sticky>
           {/* 条件筛选栏 */}
-          <Filter setFilters={setFilters}/>
+          <Filter setFilters={setFilters} filtersData={filtersData}/>
         </Sticky>
 
         {/* 房屋列表 */}
@@ -218,6 +187,13 @@ class HouseList extends Component {
 }
 
 export default connect(
-  state => ({filters: state.modifyFilters, list: state.houseList, count: state.houseCount}),
-  {setFilters, getHouses, moreHouses}
+  state => (
+    {
+      filters: state.modifyFilters,
+      list: state.houseList,
+      count: state.houseCount,
+      filtersData: state.filterData
+    }
+  ),
+  {setFilters, getHouses, moreHouses, getFilters}
 )(HouseList)

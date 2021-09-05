@@ -5,7 +5,8 @@ import {
   RECEIVER_RECOMMEND,
   MODIFY_FILTERS,
   RECEIVER_HOUSES,
-  ADD_HOUSE
+  ADD_HOUSE,
+  RECEIVER_FILTERS
 } from './action-types'
 import store from './store'
 
@@ -76,13 +77,30 @@ export const getRecommend = () => dispatch => {
 /* 房屋列表 */
 // 房屋筛选条件
 export const setFilters = filtersData => ({type: MODIFY_FILTERS, data: filtersData})
+// 接收房屋筛选条件
+const receiver_filters = filtersData => ({type: RECEIVER_FILTERS, data: filtersData})
+// 请求房屋筛选条件
+export const getFilters = (value, label) => dispatch => {
 
+  API.get(`/houses/condition/?id=${value}&city_name=${label}`).then(
+    response => {
+      console.log(response)
+      dispatch(receiver_filters(response.data.body))
+    }
+  )
+
+}
+// 接收房屋数据
 const receiver_houses = houseList => ({type: RECEIVER_HOUSES, data: houseList})
+// 接收房屋数量
 const receiver_houses_count = count => ({type: 'RECEIVER_HOUSES_COUNT', data: count})
+// 接收更多房屋数据
 const add_house = houseData => ({type: ADD_HOUSE, data: houseData})
-
+// 请求房屋数据
 export const getHouses = (entire = null) => dispatch => {
+
   const {label} = JSON.parse(localStorage.getItem('hkzf_city'))
+
   let {modifyFilters: filters} = store.getState()
 
   if (entire !== null) {
@@ -101,7 +119,7 @@ export const getHouses = (entire = null) => dispatch => {
     }).then(
       response => {
         const {list, count} = response.data.body
-        if (list > 0 && count > 0) {
+        if (list.length > 0 && count > 0) {
           resolve()
         } else {
           reject()
@@ -112,6 +130,7 @@ export const getHouses = (entire = null) => dispatch => {
     )
   })
 }
+// 请求更多房屋数据
 export const moreHouses = (startIndex = 0, label = '') => dispatch => {
   const {filters} = store.getState()
   API.get('/houses/house/', {

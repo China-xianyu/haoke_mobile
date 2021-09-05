@@ -5,7 +5,7 @@ export const getCurrentCity = () => {
   // 从本地获取信息
   const localCity = JSON.parse(localStorage.getItem('hkzf_city'))
   if (!localCity) {
-    // 存在
+    // 不存在
     return new Promise((resolve, reject) => {
       // 获取当前城市信息
       const curCity = new window.BMap.LocalCity()
@@ -25,7 +25,7 @@ export const getCurrentCity = () => {
       })
     }).then()
   }
-  // 不存在
+  // 存在
   return Promise.resolve(localCity)
 }
 

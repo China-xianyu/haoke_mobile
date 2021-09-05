@@ -4,7 +4,8 @@ import {
   RECEIVER_RECOMMEND,
   MODIFY_FILTERS,
   RECEIVER_HOUSES,
-  ADD_HOUSE
+  ADD_HOUSE,
+  RECEIVER_FILTERS
 } from './action-types'
 import {combineReducers} from 'redux'
 
@@ -44,6 +45,15 @@ function modifyFilters(state = {}, action) {
   }
 }
 
+function filterData (state = {}, action) {
+  switch(action.type){
+    case RECEIVER_FILTERS:
+      return action.data
+    default:
+      return state
+  }
+}
+
 function houseList(state = [], action) {
   switch (action.type) {
     case RECEIVER_HOUSES:
@@ -70,5 +80,6 @@ export default combineReducers({
   recommend,
   modifyFilters,
   houseList,
-  houseCount
+  houseCount,
+  filterData
 })
