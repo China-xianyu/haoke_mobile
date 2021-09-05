@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import RcQueueAnim from 'rc-queue-anim'
+import PubSub from 'pubsub-js'
 
 import FilterFooter from '../../../../components/FilterFooter'
 import style from './FilterMore.module.scss'
@@ -45,6 +46,8 @@ export default class FilterMore extends Component {
   /* 确定处理 */
   onOk = () => {
     const {type, onSave} = this.props
+    // 订阅筛选房源事件
+    PubSub.publish('getHouse')
     onSave(type, this.state.selectedValues)
   }
 

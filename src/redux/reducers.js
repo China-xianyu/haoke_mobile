@@ -1,4 +1,11 @@
-import {RECEIVER_GROUPS, RECEIVER_SWIPERS, RECEIVER_RECOMMEND, MODIFY_FILTERS, RECEIVER_HOUSES} from './action-types'
+import {
+  RECEIVER_GROUPS,
+  RECEIVER_SWIPERS,
+  RECEIVER_RECOMMEND,
+  MODIFY_FILTERS,
+  RECEIVER_HOUSES,
+  ADD_HOUSE
+} from './action-types'
 import {combineReducers} from 'redux'
 
 // 租房小组
@@ -37,9 +44,20 @@ function modifyFilters(state = {}, action) {
   }
 }
 
-function housesData(state = [], action){
+function houseList(state = [], action) {
   switch (action.type) {
     case RECEIVER_HOUSES:
+      return action.data
+    case ADD_HOUSE:
+      return [...state, ...action.data.list]
+    default:
+      return state
+  }
+}
+
+function houseCount(state = 0, action) {
+  switch (action.type) {
+    case 'RECEIVER_HOUSES_COUNT':
       return action.data
     default:
       return state
@@ -51,5 +69,6 @@ export default combineReducers({
   groups,
   recommend,
   modifyFilters,
-  housesData
+  houseList,
+  houseCount
 })

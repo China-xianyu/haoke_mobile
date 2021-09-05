@@ -8,3 +8,5 @@ export const RECEIVER_RECOMMEND = 'RECEIVER_RECOMMEND'
 export const MODIFY_FILTERS = 'MODFIY_FILTERS'
 // 获取符合条件的房屋
 export const RECEIVER_HOUSES = 'RECEIVER_HOUSES'
+// 添加房源数
+export const ADD_HOUSE = 'ADD_HOUSE'

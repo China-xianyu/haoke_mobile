@@ -1,5 +1,6 @@
 import React, {Component, createRef} from 'react'
 import RcQueueAnim from 'rc-queue-anim'
+import PubSub from 'pubsub-js'
 
 import FilterTitle from '../FilterTitle'
 import FilterMore from '../FilterMore'
@@ -139,6 +140,8 @@ export default class Filter extends Component {
 
     /* 更新数据时 返回顶部 */
     window.scrollTo(0, 0)
+    // 订阅筛选房源事件
+    PubSub.publish('getHouse')
 
     this.props.setFilters(filters)
     /* 更新状态 */
