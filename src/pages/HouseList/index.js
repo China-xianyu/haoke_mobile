@@ -1,9 +1,8 @@
 import React, {Component} from 'react'
 import {Flex, Toast} from 'antd-mobile'
 import {connect} from 'react-redux'
-import {setFilters, getHouses} from '../../redux/actions'
-
 import {List, AutoSizer, WindowScroller, InfiniteLoader} from 'react-virtualized'
+import PubSub from 'pubsub-js'
 
 import Filter from './components/Filter'
 import SearchHeader from '../../components/SearchHeader'
@@ -12,13 +11,14 @@ import Sticky from '../../components/Sticky'
 import NoHouse from '../../components/NoHouse'
 import {API} from '../../utils'
 import styles from './HouseList.module.css'
+import {setFilters, getHouses, moreHouses} from '../../redux/actions'
+
 
 class HouseList extends Component {
 
   state = {
     curCityName: '',
-    count: 0,
-    isLoading: false
+    isLoading: true
   }
 
   /* 初始化数据 */
@@ -61,7 +61,7 @@ class HouseList extends Component {
 
   /* 渲染房屋列表 */
   renderHouseList = ({key, index, style}) => {
-    const {list} = this.props.housesData
+    const {list} = this.props
     const house = list[index]
 
     /* 如果房屋数据不存在 返回一个loading */
@@ -87,8 +87,9 @@ class HouseList extends Component {
 
   /* 渲染列表 */
   renderList = () => {
-    const {count, isLoading} = this.state
-    console.log(this.props.housesData)
+    const {count} = this.props
+    const {isLoading} = this.state
+
     const {renderHouseList, isRowLoaded, loadMoreRows} = this
 
     if (count === 0 && !isLoading) {
@@ -133,34 +134,31 @@ class HouseList extends Component {
 
   /* 判断该行是否加载完毕 */
   isRowLoaded = ({index}) => {
-    const {list} = this.state
+    const {list} = this.props
     return !!list[index]
   }
 
   /* 动态加载数据的方法 (当前方法必须返回一个 Promise 并且在数据返回时调用 resolve 即可) */
   loadMoreRows = ({startIndex, stopIndex}) => {
-
     const {label} = JSON.parse(localStorage.getItem('hkzf_city'))
-    const {list, count} = this.state;
-
+    const {moreHouses} = this.props;
     return new Promise((resolve, reject) => {
-      if (list.length < count) {
-        API.get('/houses/house/', {
-          params: {
-            cityName: label,
-            ...this.filters,
-            start: startIndex
-          }
-        }).then(response => {
-
-          this.setState({
-            list: [...list, ...response.data.body.list]
-          })
-
-          resolve()
-        })
-      }
+      moreHouses(startIndex, label)
+      resolve()
     })
+  }
+
+  _get_house = (entire) => {
+    this.props.getHouses(entire).then(
+      () => {
+        this.setState({isLoading: true})
+        Toast.hide()
+      },
+      () => {
+        this.setState({isLoading: false})
+        Toast.hide()
+      }
+    )
   }
 
   componentDidMount() {
@@ -171,9 +169,14 @@ class HouseList extends Component {
     /* 获取当前定位城市 */
     const {label} = JSON.parse(localStorage.getItem('hkzf_city'))
     this.setState({curCityName: label})
-
-    this.props.getHouses(entire)
-
+    const {_get_house} = this;
+    Toast.loading('正在加载中', 0, null, false)
+    _get_house(entire)
+    // 发布筛选房源事件
+    PubSub.subscribe('getHouse', function (msg, data) {
+      Toast.loading('正在加载中', 0, null, false)
+      _get_house(entire)
+    })
   }
 
   componentDidUpdate() {
@@ -215,6 +218,6 @@ class HouseList extends Component {
 }
 
 export default connect(
-  state => ({filters: state.modifyFilters, housesData: state.housesData}),
-  {setFilters, getHouses}
+  state => ({filters: state.modifyFilters, list: state.houseList, count: state.houseCount}),
+  {setFilters, getHouses, moreHouses}
 )(HouseList)
