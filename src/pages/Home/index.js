@@ -6,7 +6,7 @@ import {TabBar} from 'antd-mobile'
 import './home.css'
 // 引入路由组件
 import Index from '../../containers/IndexVessel/IndexVessel'
-import HouseList from '../HouseList'
+import HouseList from '../../containers/List/HouseList'
 import Profile from '../Profile'
 
 // TabBar 数据

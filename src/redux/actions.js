@@ -56,7 +56,7 @@ export const getSwipers = () => dispatch => {
 
 // 推荐房源
 export const getRecommend = () => dispatch => {
-  new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     API({
       url: '/home/recommend',
     }).then(
@@ -84,7 +84,6 @@ export const getFilters = (value, label) => dispatch => {
 
   API.get(`/houses/condition/?id=${value}&city_name=${label}`).then(
     response => {
-      console.log(response)
       dispatch(receiver_filters(response.data.body))
     }
   )
@@ -100,11 +99,14 @@ const add_house = houseData => ({type: ADD_HOUSE, data: houseData})
 export const getHouses = (entire = null) => dispatch => {
 
   const {label} = JSON.parse(localStorage.getItem('hkzf_city'))
-
   let {modifyFilters: filters} = store.getState()
+  const mode = filters['mode']
 
   if (entire !== null) {
-    filters['mode'] = entire === 1;
+    filters['mode'] = entire === 1
+  }
+  if (mode) {
+    filters['mode'] = mode
   }
 
   /* 获取数据 */

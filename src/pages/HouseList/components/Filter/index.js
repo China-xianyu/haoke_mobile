@@ -28,8 +28,6 @@ export default class Filter extends Component {
     titleSelectStatus,
     /* 控制 FilterPicker 或者 FilterMore 显示或则隐藏 */
     openType: '',
-    /* 所有筛选条件数据 */
-    filtersData: {},
     /* 选中的数据汇总 */
     selectedValues,
     show: false
@@ -42,7 +40,9 @@ export default class Filter extends Component {
 
     this.htmlBody.className = 'fixed-body'
 
-    const {selectedValues, titleSelectStatus} = this.state
+    const {titleSelectStatus} = this.state
+
+    const selectedValues = this.props.filters
 
     /* 不直接修改对象，创建一个新对象 */
     let newTitleSelectStatus = {...titleSelectStatus}
@@ -56,17 +56,22 @@ export default class Filter extends Component {
 
       /* 判断是否有选中数据来判断是否高亮 */
       const selectedVal = selectedValues[key]
-      if (key === 'area' && (selectedVal.length !== 2 || selectedVal[0] !== 'area')) {
-        newTitleSelectStatus[key] = true
-      } else if (key === 'mode' && selectedVal[0] !== null) {
-        newTitleSelectStatus[key] = true
-      } else if (key === 'price' && selectedVal[0] !== null) {
-        newTitleSelectStatus[key] = true
-      } else if (key === 'more') {
-        // 更多选项，FilterMore组件
-      } else {
-        newTitleSelectStatus[key] = false
+
+      if (selectedVal) {
+
+        if (key === 'area' && (selectedVal.length !== 2 && selectedVal[0] !== 'area')) {
+          newTitleSelectStatus[key] = true
+        } else if (key === 'mode' && selectedVal[0] !== null) {
+          newTitleSelectStatus[key] = true
+        } else if (key === 'price' && selectedVal[0] !== null) {
+          newTitleSelectStatus[key] = true
+        } else if (key === 'more') {
+          // 更多选项，FilterMore组件
+        } else {
+          newTitleSelectStatus[key] = false
+        }
       }
+
     })
 
     this.setState({
@@ -167,7 +172,7 @@ export default class Filter extends Component {
       return null;
     }
     return <FilterMore data={data} type={openType} onSave={onSave} defaultValues={defaultValues} onCancel={onCancel}
-                       show={this.state.show}/>
+                       show={this.state.show} />
   }
 
   /* 渲染 FilterPicker 组件 */
@@ -204,7 +209,7 @@ export default class Filter extends Component {
         break;
     }
     return <FilterPicker key={openType} onCancel={onCancel} onSave={onSave} data={data} cols={cols} type={openType}
-                         defaultValue={defaultValue} show={show}/>
+                         defaultValue={defaultValue} show={show} />
   }
 
   componentDidMount() {
@@ -226,13 +231,13 @@ export default class Filter extends Component {
         {/* 前三个菜单的遮盖层 */}
         <RcQueueAnim animConfig={[{opacity: [1, 0]}]}>
           {(openType === 'area' || openType === 'mode' || openType === 'price') ?
-            <div key="1" className={style.mask} onClick={() => onCancel(openType)}/>
+            <div key="1" className={style.mask} onClick={() => onCancel(openType)} />
             : null}
         </RcQueueAnim>
 
         <div className={style.content}>
           {/* 标题栏 */}
-          <FilterTitle titleSelectStatus={titleSelectStatus} ClickHandler={ClickHandler}/>
+          <FilterTitle titleSelectStatus={titleSelectStatus} ClickHandler={ClickHandler} />
           {/* 前三个菜单对应内容 */}
           {renderFilterPicker()}
 

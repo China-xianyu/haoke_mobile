@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import {Flex, Toast} from 'antd-mobile'
-import {connect} from 'react-redux'
 import {List, AutoSizer, WindowScroller, InfiniteLoader} from 'react-virtualized'
 import PubSub from 'pubsub-js'
 
@@ -11,18 +10,14 @@ import Sticky from '../../components/Sticky'
 import NoHouse from '../../components/NoHouse'
 import styles from './HouseList.module.css'
 import {getCurrentCity} from '../../utils'
-import {setFilters, getHouses, moreHouses, getFilters} from '../../redux/actions'
 
 
-class HouseList extends Component {
+export default class HouseList extends Component {
 
   state = {
     curCityName: '',
     isLoading: true
   }
-
-  /* 初始化数据 */
-  filters = {}
 
   /* 获取房屋数据 */
 
@@ -34,7 +29,7 @@ class HouseList extends Component {
     /* 如果房屋数据不存在 返回一个loading */
     if (!house) {
       return <div key={key} style={style}>
-        <p className={styles.loading}/>
+        <p className={styles.loading} />
       </div>
     }
 
@@ -44,7 +39,7 @@ class HouseList extends Component {
           {...house}
           src={house.houseImg}
           ClickHandler={() => {
-          }}/>
+          }} />
       </div>
     );
   }
@@ -145,7 +140,7 @@ class HouseList extends Component {
     PubSub.subscribe('getHouse', function (msg, data) {
       _get_house(entire)
     })
-    this.props.getFilters(label, value)
+    this.props.getFilters(value, label)
   }
 
   componentDidUpdate() {
@@ -164,19 +159,19 @@ class HouseList extends Component {
   render() {
     const {curCityName} = this.state
     const {renderList} = this
-    const {setFilters, filtersData} = this.props
+    const {setFilters, filtersData, filters} = this.props
     return (
       <div className={styles.root}>
         {/* 顶部搜索栏 */}
         <Flex className={styles.header}>
-          <i className="iconfont icon-back" onClick={() => this.props.history.go(-1)}/>
-          <SearchHeader curCityName={curCityName} className={styles.searchHeader}/>
+          <i className="iconfont icon-back" onClick={() => this.props.history.go(-1)} />
+          <SearchHeader curCityName={curCityName} className={styles.searchHeader} />
         </Flex>
 
         {/* 顶置 */}
         <Sticky>
           {/* 条件筛选栏 */}
-          <Filter setFilters={setFilters} filtersData={filtersData}/>
+          <Filter setFilters={setFilters} filtersData={filtersData} filters={filters} />
         </Sticky>
 
         {/* 房屋列表 */}
@@ -185,15 +180,3 @@ class HouseList extends Component {
     )
   }
 }
-
-export default connect(
-  state => (
-    {
-      filters: state.modifyFilters,
-      list: state.houseList,
-      count: state.houseCount,
-      filtersData: state.filterData
-    }
-  ),
-  {setFilters, getHouses, moreHouses, getFilters}
-)(HouseList)
